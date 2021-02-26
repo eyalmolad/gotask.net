@@ -2,13 +2,14 @@
 title: 'C# Deserializing XML with namespace in .NET core'
 author: eyal
 type: post
+toc: true
 date: 2020-04-04T15:38:13+00:00
 url: /programming/deserializing-xml-with-namespace-in-c-sharp/
-categories:
+category:
   - Programming
-tags:
+tag:
   - .netcore
-  - 'c#'
+  - c-sharp
   - serialization
   - xml
   - xml-namespace

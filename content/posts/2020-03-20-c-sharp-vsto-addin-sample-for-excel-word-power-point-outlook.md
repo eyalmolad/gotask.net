@@ -5,9 +5,9 @@ type: post
 date: 2020-03-20T19:27:52+00:00
 url: /programming/vsto/c-sharp-vsto-addin-sample-for-excel-word-power-point-outlook/
 toc: true
-categories:
+category:
   - VSTO
-tags:
+tag:
   - dot-net
   - c-sharp
   - office-programming
@@ -53,7 +53,7 @@ In case you cannot find such a project on a Visual Studio templates list, comple
   * ```ThisAddIn_Startup``` event handler will be called by the Excel application only once in the hosting application lifetime, during the application startup. This is the recommended place for initialization.
   * ```ThisAddIn_Shutdown``` event handler will be called by the application before it exits. Do your cleanups here.
 
-  _Note: Outlook no longer raises this event. If you have code that must run when Outlook shuts down, see <a href="https://go.microsoft.com/fwlink/?LinkId=506785" target="_blank" rel="noopener noreferrer">this link</a>._
+  _Note: Outlook no longer raises this event. If you have code that must run when Outlook shuts down, see [this link](https://go.microsoft.com/fwlink/?LinkId=506785).
 
 ```C#
 public partial class ThisAddIn

@@ -2,13 +2,14 @@
 title: 'C# – VSTO – Extract images from PowerPoint presentation'
 author: eyal
 type: post
+toc: true
 date: 2020-10-31T07:43:24+00:00
 url: /programming/vsto/c-sharp-extract-images-from-powerpoint-presentation/
-categories:
+category:
   - VSTO
-tags:
+tag:
   - .net
-  - 'c#'
+  - c-sharp
   - image
   - interop
   - open-xml
@@ -17,11 +18,11 @@ tags:
   - vsto
   - windows-api-codepack
   - zip
-
 ---
+
 ## Background
 
-In one of my previous posts, I created a very basic VSTO example that adds a button to the [PowerPoint ribbon][1].
+In one of my previous posts, I created a very basic VSTO example that adds a button to the [PowerPoint ribbon](/programming/vsto/c-sharp-vsto-addin-sample-for-excel-word-power-point-outlook/).
 
 Recently, I had a task I needed to enumerate all the pictures in the Power Point presentation and extract them into a zip file.
 
@@ -29,56 +30,53 @@ Power Point presentation might contain many different shapes, such as rectangles
 
 In this post, I am going to show how to extract the images using 2 different techniques:
 
-  * PowerPoint COM Interop API
-  * Extract directly from ZIP file
+* PowerPoint COM Interop API
+* Extract directly from ZIP file
 
 ## My Stack
+* Visual Studio 2019 Community.
+* .NET Framework 4.7.2 / C#
+* Office 365, Desktop Edition.
+* Windows 10 Pro 64-bit (10.0, Build 19041)
+* PowerPoint Interop DLL version 15
 
-<!-- /wp:paragraph -->
-
-<!-- wp:list -->
-
-  * Visual Studio 2019 Community.
-  * .NET Framework 4.7.2 / C#
-  * Office 365, Desktop Edition.
-  * Windows 10 Pro 64-bit (10.0, Build 19041)
-  * PowerPoint Interop DLL version 15
 
 ## Working with PowerPoint C# Interop version 15.0.0.0
 
-### Step 1 &#8211; Create a button
+### Step 1 - Create a button
 
 As shown in the previous example, I am adding a button element to the Ribbon XML. This button will have a callback set in the action attribute.
 
-<pre class="EnlighterJSRAW" data-enlighter-language="xml">&lt;customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'&gt;
-  &lt;ribbon&gt;
-     &lt;tabs&gt;
-      &lt;tab id='sample_tab' label='GoTask'&gt;
-        &lt;group id='sample_group' label='Operations'&gt;
-          &lt;button id='extract_images' label='Extract Images' size='large' getImage='OnGetImage' onAction='OnExtractImage'/&gt;
-        &lt;/group&gt;
-      &lt;/tab&gt;
-    &lt;/tabs&gt;
-  &lt;/ribbon&gt;
-&lt;/customUI&gt;</pre>
+``` XML
+<customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'>
+  <ribbon>
+     <tabs>
+      <tab id='sample_tab' label='GoTask'>
+        <group id='sample_group' label='Operations'>
+          <button id='extract_images' label='Extract Images' size='large' getImage='OnGetImage' onAction='OnExtractImage'/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
+```
 
-###  
+### Step 2 - Collect the images from different shapes
 
-### Step 2 &#8211; Collect the images from different shapes
+PowerPoint presentation can store the images in a few shapes types. All the different shape types are represented by [MsoShapeType](https://docs.microsoft.com/en-us/office/vba/api/office.msoshapetype) enum. In order to recognize the Shape type, we are going to use [Shape.Type](https://docs.microsoft.com/en-us/office/vba/api/powerpoint.shape.type) and [Shape.PlaceholderFormat.ContainedType](https://docs.microsoft.com/en-us/office/vba/api/powerpoint.shape.placeholderformat) properties: 
 
-PowerPoint presentation can store the images in a few shapes types. All the different shape types are represented by <a href="https://docs.microsoft.com/en-us/office/vba/api/office.msoshapetype" target="_blank" rel="noopener noreferrer">MsoShapeType</a> enum.  In order to recognize the Shape type, we are going to use <a href="https://docs.microsoft.com/en-us/office/vba/api/powerpoint.shape.type" target="_blank" rel="noopener noreferrer">Shape.Type</a> and <a href="https://docs.microsoft.com/en-us/office/vba/api/powerpoint.shape.placeholderformat" target="_blank" rel="noopener noreferrer">Shape.PlaceholderFormat.ContainedType</a> properties: 
+* Picture - ```MsoShapeType.msoPicture``` or ```MsoShapeType.msoLinkedPicture```
+* Picture contained in a placeholder ```MsoShapeType.msoPlaceholder```
+* Other shapes that might have a [PictureFormat](https://docs.microsoft.com/en-us/office/vba/api/powerpoint.pictureformat) property properly initialized.
 
-  * Picture &#8211;  MsoShapeType.msoPicture or MsoShapeType.msoLinkedPicture
-  * Picture contained in a placeholder MsoShapeType.msoPlaceholder
-  * Other shapes that might have a <a href="https://docs.microsoft.com/en-us/office/vba/api/powerpoint.pictureformat" target="_blank" rel="noopener noreferrer">PictureFormat</a> property properly initialized.
+In the [sample presentation](https://github.com/eyalmolad/gotask/blob/master/VSTO/PowerPointExtractImages/SamplePresentation.pptx), I've created a few shapes that contain pictures in different formats.
 
-In the [sample presentation][2], I&#8217;ve created a few shapes that contain pictures in different formats.
+In order to extract the image, I am going to use the PowerPoint Shape [Export](https://docs.microsoft.com/en-us/previous-versions/office/office-12/ff761596(v=office.12))function.
 
-In order to extract the image, I am going to use the PowerPoint Shape <a href="https://docs.microsoft.com/en-us/previous-versions/office/office-12/ff761596(v=office.12)" target="_blank" rel="noopener noreferrer">Export</a> function.
+In order to choose a directory for saving the images, I am going to use the CommonOpenFileDialog implemented in [Microsoft-WindowsAPICodePack-Shell](https://www.nuget.org/packages/Microsoft-WindowsAPICodePack-Shell/). Here is the sample implementation of using a directory picker:
 
-In order to choose a directory for saving the images, I am going to use the CommonOpenFileDialog implemented in <a href="https://www.nuget.org/packages/Microsoft-WindowsAPICodePack-Shell/" target="_blank" rel="noopener noreferrer">Microsoft-WindowsAPICodePack-Shell</a>. Here is the sample implementation of using a directory picker:
-
-<pre class="EnlighterJSRAW" data-enlighter-language="csharp">private string GetSaveDir()
+``` C#
+private string GetSaveDir()
 {
   using (var dialog = new CommonOpenFileDialog())
   {
@@ -93,16 +91,19 @@ In order to choose a directory for saving the images, I am going to use the Comm
   }
 
   return null;
-}</pre>
+}
+```
 
 The code below iterates over all slides in the presentation and extracts the images from the shapes.
 
 Please note the following remarks:
 
-  * The extracted images are in PNG format using the <code class="EnlighterJSRAW" data-enlighter-language="csharp">PpShapeFormat.ppShapeFormatPNG</code> enum. You can specify JPG, BMP or other formats defined in the <code class="EnlighterJSRAW" data-enlighter-language="csharp">PpShapeFormat</code> enum.
-  * Pay attention for the <code class="EnlighterJSRAW" data-enlighter-language="csharp">shape.PictureFormat.CropBottom</code> check. Generally, every shape has <code class="EnlighterJSRAW" data-enlighter-language="csharp">PictureFormat</code> set to a non-null value. So we can&#8217;t count on filtering out the shapes that have this property set to null. The trick is to try to access one of the properties (CropBottom or other). If the exception is thrown, we can skip the object (it&#8217;s not a picture).
+* The extracted images are in PNG format using the ```PpShapeFormat.ppShapeFormatPNG``` enum. You can specify JPG, BMP or other formats defined in the ```PpShapeFormat``` enum.
 
-<pre class="EnlighterJSRAW" data-enlighter-language="null">var i = 1;
+* Pay attention for the ```shape.PictureFormat.CropBottom``` check. Generally, every shape has ```PictureFormat``` set to a non-null value. So we can't count on filtering out the shapes that have this property set to null. The trick is to try to access one of the properties (CropBottom or other). If the exception is thrown, we can skip the object (it's not a picture).
+
+``` C#
+var i = 1;
 foreach (Slide slide in app.ActivePresentation.Slides)
 {
   foreach (Shape shape in slide.Shapes)
@@ -129,7 +130,7 @@ foreach (Slide slide in app.ActivePresentation.Slides)
         // this is just a dummy code. In case there is no picture in the
         // shape, any attempt to read the CropBottom variable will throw 
         // an exception
-        var test = shape.PictureFormat.CropBottom &gt; -1;
+        var test = shape.PictureFormat.CropBottom > -1;
         doExport = true;
       }
       catch
@@ -141,24 +142,26 @@ foreach (Slide slide in app.ActivePresentation.Slides)
     if(doExport) 
       shape.Export(Path.Combine(saveDirectory, $"{i++}.png"), PpShapeFormat.ppShapeFormatPNG);
   }
-}</pre>
+}
+```
 
-When running this code on the presentation provided with the project, it should export 4 pictures to the chosen directory. (Picture&#8217;s credit: <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>)
+When running this code on the presentation provided with the project, it should export 4 pictures to the chosen directory. (Picture's credit: [Unsplash](https://unsplash.com))
 
 ## Working with ZIP file to extract the images
 
-The pptx format is actually a zip file with a well formed structure defined in the Open-XML format. You could open the pptx file with any zip file extractor and look at it&#8217;s contents. Fortunately, the pictures are stored in the <code class="EnlighterJSRAW" data-enlighter-language="generic">ppt\media</code> directory within the archive.
+The pptx format is actually a zip file with a well formed structure defined in the Open-XML format. You could open the pptx file with any zip file extractor and look at it's contents. Fortunately, the pictures are stored in the ```ppt\media``` directory within the archive.
 
 All I have to do now it to extract the archive and grab the images.
 
-I am going to use the .NET <a href="https://docs.microsoft.com/en-us/dotnet/api/system.io.compression.zipfile?view=netcore-3.1" target="_blank" rel="noopener noreferrer">ZipFile</a> class located in System.IO.Compression namespace.
+I am going to use the .NET [ZipFile](https://docs.microsoft.com/en-us/dotnet/api/system.io.compression.zipfile?view=netcore-3.1) class located in ```System.IO.Compression``` namespace.
 
-  1. Open the pptx file using <code class="EnlighterJSRAW" data-enlighter-language="csharp">ZipFile.Open</code>
-  2. Create a temporary <code class="EnlighterJSRAW" data-enlighter-language="generic">temp_zip</code> directory to extract the files to
-  3. Copy the media files
-  4. Delete the temporary <code class="EnlighterJSRAW" data-enlighter-language="generic">temp_zip</code> directory
+1. Open the pptx file using ```ZipFile.Open```
+2. Create a temporary ```temp_zip``` directory to extract the files to
+3. Copy the media files
+4. Delete the temporary ```temp_zip``` directory
 
-<pre class="EnlighterJSRAW" data-enlighter-language="csharp">private void ExtractWithZip(string pptxFile, string directory)
+```C#
+private void ExtractWithZip(string pptxFile, string directory)
 {
   var zipDir = "";
 
@@ -183,11 +186,10 @@ I am going to use the .NET <a href="https://docs.microsoft.com/en-us/dotnet/api/
   {
     //
   }
-}</pre>
+}
+```
 
 ## Useful resources
 
-  * Source code of this project on <a href="https://github.com/eyalmolad/gotask/tree/master/VSTO/PowerPointExtractImages" target="_blank" rel="noopener noreferrer">GitHub</a>
+* Source code of this project on [GitHub](https://github.com/eyalmolad/gotask/tree/master/VSTO/PowerPointExtractImages)
 
- [1]: https://gotask.net/programming/vsto/c-sharp-vsto-addin-sample-for-excel-word-power-point-outlook/
- [2]: https://github.com/eyalmolad/gotask/blob/master/VSTO/PowerPointExtractImages/SamplePresentation.pptx

@@ -19,8 +19,8 @@ DefaultContentLanguage = "en"
 #config/_default/menus/menu.toml
 
 [taxonomies]
-category = "categories"
-tag = "tags"
+category = "category"
+tag = "tag"
 
 
 [markup]
@@ -48,9 +48,10 @@ twitter = "@realdjole"
 largeTwitterCard = false # set to true if you want to show a large twitter card image. The default is a small twitter card image
 introDescription = "A coder, dreamer and complex problem solver"
 customCss = ["css/custom.css"]
-
+# The year when ths website was created
+since = 2020
 # Google analytics Id
-ga_analytics = "XXXXXXXXXX"
+ga_analytics = "UA-162812602-1"
 
 # Baidu analytics Id
 # baidu_analytics = "XXXXXXXX"
@@ -96,7 +97,7 @@ enforceLightMode = true
 # enforceDarkMode = false
 
 # customize footer icon. see issue https://github.com/chipzoller/hugo-clarity/issues/77
-# footerLogo = "icons/copy.svg"
+footerLogo = ""
 
 # Text for the languages menu.
 languageMenuName = "🌐"
@@ -117,5 +118,3 @@ languageMenuName = "🌐"
 # dateFormat = "2006-01-02" # Default to "Jan 2, 2006".
 # customFonts = false # toggle to true if you want to use custom fonts only.
 
-# The year when ths website was created
-# since = 2020

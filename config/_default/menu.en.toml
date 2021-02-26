@@ -1,31 +1,22 @@
-[[main]]
-  name = "Home"
-  url = ""
-  weight = -110
 
-[[main]]
-  name = "Archives"
-  url = "post/rich-content/"
-  weight = -109
 
 # Submenus are done this way: parent -> identifier
-[[main]]
-  name = "Links"
-  identifier = "Links"
-  weight = -108
-[[main]]
-  parent = "Links"
-  name = "LinkedIn"
-  url = "https://www.linkedin.com/in/eyalmolad/"
-[[main]]
-  parent = "Links"
-  name = "Twitter"
-  url = "https://twitter.com/realdjole"
-
 [[main]]
   name = "About"
   url = "about/"
   weight = -107
+[[main]]
+  name = "Contact"
+  url = "contact/"
+  weight = -106
+[[main]]
+  name = "Privacy"
+  url = "privacy-policy/"
+  weight = -105
+  [[main]]
+  name = "Terms"
+  url = "terms/"
+  weight = -105
 
 # social menu links
 

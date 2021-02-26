@@ -6,10 +6,10 @@ date: 2020-10-14T09:40:42+00:00
 draft: true
 private: true
 url: /programming/vsto/c-sharp-save-excel-with-values-only-vsto/
-categories:
+category:
   - VSTO
-tags:
-  - 'c#'
+tag:
+  - c-sharp
   - office-programming
 
 ---

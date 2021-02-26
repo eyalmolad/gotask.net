@@ -6,10 +6,10 @@ date: 2020-04-15T21:11:24+00:00
 draft: true
 private: true
 url: /programming/vsto/fast-drawing-a-table-in-excel-in-a-really-in-c-sharp/
-categories:
+category:
   - VSTO
-tags:
-  - 'c#'
+tag:
+  - c-sharp
   - excel
 
 ---

@@ -6,7 +6,7 @@ date: 2020-03-25T18:34:09+00:00
 draft: true
 private: true
 url: /programming/c-sharp-deserialize-json-with-fields-without-name-fields/
-categories:
+category:
   - Programming
 
 ---

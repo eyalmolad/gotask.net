@@ -6,10 +6,10 @@ date: 2020-04-04T10:16:50+00:00
 draft: true
 private: true
 url: /programming/different-methods-to-copy-file-in-windows-using-c-sharp/
-categories:
+category:
   - Programming
-tags:
-  - 'c#'
+tag:
+  - c-sharp
 
 ---
 Copying files is a very common task when developing Desktop applications or command line tools. As the operating system provides

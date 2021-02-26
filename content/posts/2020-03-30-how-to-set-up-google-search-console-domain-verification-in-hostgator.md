@@ -5,9 +5,9 @@ type: post
 date: 2020-03-30T17:34:17+00:00
 url: /tutorials/how-to-set-up-google-search-console-domain-verification-in-hostgator/
 toc: true
-categories:
+category:
   - Tutorials
-tags:
+tag:
   - cpanel
   - dns-records
   - google-search-console

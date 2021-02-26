@@ -5,10 +5,10 @@
       {{ .Date.Format (default "Jan 2, 2006" $.Site.Params.dateFormat) -}}
     </span>
   {{- end }}
-  {{- with .Params.tags -}}
+  {{- with .Params.tag -}}
     {{- range . }}
       {{- $tag := urlize . }}
-      <a href='{{ absLangURL (printf "tags/%s" $tag) }}' class="post_tag button button_translucent">
+      <a href='{{ absLangURL (printf "tag/%s" $tag) }}' class="post_tag button button_translucent">
         {{- . }}
       </a>
     {{- end }}

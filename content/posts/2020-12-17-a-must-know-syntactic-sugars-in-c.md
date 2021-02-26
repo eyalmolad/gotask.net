@@ -6,7 +6,7 @@ date: 2020-12-17T14:29:29+00:00
 draft: true
 private: true
 url: /programming/a-must-know-syntactic-sugars-in-c/
-categories:
+category:
   - Programming
 
 ---

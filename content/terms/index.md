@@ -17,4 +17,4 @@ All content provided on this blog is for informational purposes only. The owner 
 
 If you have any questions about these Terms, please [contact us][1].
 
- [1]: https://gotask.net/contact
+ [1]: https://gotask.net/contact/

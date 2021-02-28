@@ -8,7 +8,7 @@ url: /programming/deserializing-xml-with-namespace-in-c-sharp/
 category:
   - Programming
 tag:
-  - .netcore
+  - dot-netcore
   - c-sharp
   - serialization
   - xml

@@ -8,7 +8,7 @@ url: /programming/vsto/c-sharp-extract-images-from-powerpoint-presentation/
 category:
   - VSTO
 tag:
-  - .net
+  - dot-net
   - c-sharp
   - image
   - interop

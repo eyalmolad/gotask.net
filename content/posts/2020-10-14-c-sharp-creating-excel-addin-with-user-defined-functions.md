@@ -8,7 +8,7 @@ url: /programming/vsto/c-sharp-creating-excel-addin-with-user-defined-functions/
 category:
   - VSTO
 tag:
-  - .net
+  - dot-net
   - c-sharp
   - excel
   - excel-dna

@@ -8,7 +8,7 @@ url: /programming/reverse-list-elements-in-c-sharp/
 category:
   - Programming
 tag:
-  - .netcore
+  - dot-netcore
   - c-sharp
   - generics
   - linq

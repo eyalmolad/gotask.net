@@ -8,7 +8,7 @@ url: /programming/c-parsing-xml-with-namespace-using-linq/
 category:
   - Programming
 tag:
-  - .netcore
+  - dot-net-core
   - anonymous-type
   - linq
   - linq-to-xml

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jamstack on GoTask</title>
+    <link>https://gotask.net/tag/jamstack/</link>
+    <description>Recent content in jamstack on GoTask</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright © 2020–2021 ; All rights reserved.</copyright>
+    <lastBuildDate>Sun, 13 Dec 2020 14:49:18 +0000</lastBuildDate><atom:link href="https://gotask.net/tag/jamstack/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Setup Hugo Site Generator on GitHub Pages with a Custom Domain</title>
+      <link>https://gotask.net/tutorials/setup-hugo-on-github-pages-custom-domain/</link>
+      <pubDate>Sun, 13 Dec 2020 14:49:18 +0000</pubDate>
+      
+      <guid>https://gotask.net/tutorials/setup-hugo-on-github-pages-custom-domain/</guid>
+      <description>
+        
+          &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Recently, I wanted to setup a new blog. I have purchased the domain and started looking for the hosting.&lt;/p&gt;
+&lt;p&gt;My main goal was to build a clean and a simple site that loads fast. Instead of working with the traditional WordPress platform and trying to configure dozens of plugins to increase the performance, I decided to go with a Jamstack based solution. &lt;a href=&#34;https://jamstack.org&#34;&gt;Jamstack&lt;/a&gt; based sites are pre-generated and served from the static repositories or CDNs, so no pages are generated on the fly when the users access the site.&lt;/p&gt;
+&lt;p&gt;To pre-generate the site, I chose &lt;a href=&#34;https://gohugo.io&#34;&gt;Hugo&lt;/a&gt;, which is a static site generator optimized for speed and relatively easy to configure. Hugo is an open source project written in Go language.&lt;/p&gt;
+&lt;p&gt;Since the site is pre-generated and can be stored in the GitHub, I chose the GitHub Pages as a hosting. The deployment on GitHub Pages is very simple (a single git push) command, it can setup a custom domain and it has the built-in support for SSL.&lt;/p&gt;
+&lt;h2 id=&#34;requirements&#34;&gt;Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://git-scm.com/downloads&#34;&gt;Git&lt;/a&gt; installed on your local machine (including the command line interface)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com&#34;&gt;GitHub&lt;/a&gt; account&lt;/li&gt;
+&lt;li&gt;If you wish to setup a &#39;private&#39; repository with the custom domain, you will need to purchase one of the GitHub subscriptions. I use the &#39;Team&#39; subscription which costs 4$ per month (as of Dec/2020). You may check the &lt;a href=&#34;https://github.com/pricing&#34;&gt;pricing for more information&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;A Text editor, I use &lt;a href=&#34;https://notepad-plus-plus.org&#34;&gt;Notepad ++&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;A basic command line knowledge&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;setting-up-the-repository&#34;&gt;Setting up the repository&lt;/h2&gt;
+&lt;h3 id=&#34;installing-hugo-on-the-local-computer&#34;&gt;Installing Hugo on the local computer&lt;/h3&gt;
+&lt;p&gt;As described in the &lt;a href=&#34;https://github.com/gohugoio/hugo&#34;&gt;Hugo Git repository&lt;/a&gt;, there are two ways to install the Hugo site generator on the local machine:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Install binary files using one of the common Package Managers&lt;/li&gt;
+&lt;li&gt;Build from the sources&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For this post we will proceed with the binary files&#39; installation. Since I am using Windows 10 operating system, I used the &lt;a href=&#34;https://chocolatey.org&#34;&gt;Chocolatey Package Manager&lt;/a&gt;. I installed Chocolatey as an Administrator as described in the &lt;a href=&#34;https://chocolatey.org/install&#34;&gt;install page&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For Mac/Linux users, I recommend working with &lt;a href=&#34;https://brew.sh&#34;&gt;Homebrew&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;After having the package manager installed, we can use a command line to install the Hugo site generator.&lt;/p&gt;
+&lt;h4 id=&#34;windows&#34;&gt;Windows&lt;/h4&gt;
+&lt;p&gt;Open the command line prompt as an Administrator and type:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;choco install hugo -confirm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;maclinux&#34;&gt;Mac/Linux&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;brew install hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;More instructions for the &lt;a href=&#34;https://gohugo.io/getting-started/installing/&#34;&gt;Hugo installation&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;setting-up-the-repository-on-github&#34;&gt;Setting up the repository on GitHub&lt;/h3&gt;
+&lt;p&gt;Since Hugo is pre-generated site and served from a Git repository, we need to create a
+new repository on GitHub.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://gotask.net/wp-content/uploads/2020/12/git-create-repository-1.png&#34;
+         alt=&#34;Create new private repository in GitHub&#34;/&gt; &lt;figcaption&gt;
+            &lt;p&gt;Create new private repository in GitHub&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ol&gt;
+&lt;li&gt;In your web browser, go to &lt;a href=&#34;https://github.com/new&#34;&gt;https://github.com/new&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Choose the name for the repository. For this example, we are going to use: &lt;code&gt;myhugoblog&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Since we are not creating an open source project, but the repository that will contain my blog, we will set the repository to &#39;Private&#39;. This step is not mandatory as you can setup the site and the custom domain with public repositories as well.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;setting-up-the-local-directory-for-the-site&#34;&gt;Setting up the local directory for the site&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a local directory that will contain the theme and the pre-generated site. For this example, we will use: &lt;code&gt;c:\sites\&lt;/code&gt; directory.&lt;/li&gt;
+&lt;li&gt;Open the command line prompt at &lt;code&gt;c:\sites\&lt;/code&gt; and type:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;git clone https://github.com/&amp;lt;user_name&amp;gt;/&amp;lt;repository_name&amp;gt;.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; In some cases, you might get an error that repository does not exists. In such case, try to clone with following url (you will be prompted for the password):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;git clone https://&amp;lt;user_name&amp;gt;@github.com/&amp;lt;user_name&amp;gt;/&amp;lt;repository_name&amp;gt;.git&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;generate-new-hugo-site&#34;&gt;Generate new Hugo site&lt;/h3&gt;
+&lt;p&gt;At this stage, we have an empty repository connected to our local directory. Now we need to generate the Hugo site.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;In the command line prompt make sure that the current directory is &lt;code&gt;c:\sites\&lt;/code&gt; and type:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;hugo new site myhugoblog --force
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Important note: The root directory of the repository in Git and the root directory of the pre-generated site &lt;span style=&#34;text-decoration: underline;&#34;&gt;must be the same&lt;/span&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;choosing-the-hugo-theme&#34;&gt;Choosing the Hugo theme&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://themes.gohugo.io&#34;&gt;Hugo site generator&lt;/a&gt; has a few hundreds of free themes available. I decided to go with &lt;a href=&#34;https://themes.gohugo.io/theme/bodhi&#34;&gt;Bodhi blog theme&lt;/a&gt;. It is clean, simple and minimalistic. A perfect solution for my new blog.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Download the zip archive of the theme from the theme repository. In our case, it is &lt;a href=&#34;https://github.com/rhnvrm/bodhi/archive/master.zip&#34;&gt;https://github.com/rhnvrm/bodhi/archive/master.zip&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Extract the zip file to &lt;code&gt;c:\sites\&amp;lt;repository_name&amp;gt;\themes&lt;/code&gt;. In our case, it&#39;s &lt;code&gt;c:\sites\myhugoblog&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Typically, your directory name in the zip file will be: &lt;code&gt;&amp;lt;theme_name&amp;gt;\_master&lt;/code&gt;. Remove the &lt;code&gt;_master&lt;/code&gt; suffix from the directory name. In our case, we will have &lt;code&gt;c:\sites\myhugoblog\themes\bodhi&lt;/code&gt; directory.&lt;/li&gt;
+&lt;li&gt;Open the &lt;code&gt;config.toml&lt;/code&gt; from the site root directory in the text editor and paste the default configuration of the theme as described in your theme page. Please note that different themes might have different configurations options.
+&lt;ul&gt;
+&lt;li&gt;Make sure you change the baseUrl property to your custom domain url.&lt;/li&gt;
+&lt;li&gt;Make sure you add/change the default publish directory in the &lt;code&gt;config.toml&lt;/code&gt; to &lt;code&gt;publishDir = docs&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;To run the site locally type the following in your command prompt:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;  hugo server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;Open your browser at &lt;code&gt;http://localhost:1313/&lt;/code&gt; to see the site. Currently it should have only the theme&#39;s default page. (Note that the port might be different. Check the console window for the exact address).&lt;/li&gt;
+&lt;li&gt;If you are happy with the site, press &lt;code&gt;CTRL + X&lt;/code&gt; to kill the server.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;deploying-the-site-to-git-repository&#34;&gt;Deploying the site to Git repository&lt;/h3&gt;
+&lt;p&gt;Once we have the site running locally, we need to build it (generate the static pages, links, sitemap) and push it to the remote repository.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Open the root directory of the site in the command prompt:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://gotask.net/wp-content/uploads/2021/01/hugo-site-build-console.png&#34;
+         alt=&#34;Build Hugo site console output&#34; width=&#34;268&#34; height=&#34;239&#34;/&gt; &lt;figcaption&gt;
+            &lt;p&gt;Build Hugo site console output&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;To build the site, type:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Type the following git command to add the new files to the repository, commit and push:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;git add .
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;git commit -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;Added theme&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;git push origin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that you need to repeat this process every time you make any change to the site.&lt;/p&gt;
+&lt;h2 id=&#34;connecting-to-github-pages&#34;&gt;Connecting to GitHub Pages&lt;/h2&gt;
+&lt;p&gt;Once we have the repository set, we need to enable the GitHub Pages capability for our repository.&lt;/p&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://gotask.net/wp-content/uploads/2020/12/git-set-branch-custom-domain.png&#34;
+         alt=&#34;GitHub Pages Settings for Branch and Custom Domain&#34; width=&#34;607&#34; height=&#34;285&#34;/&gt; &lt;figcaption&gt;
+            &lt;p&gt;GitHub Pages Settings for Branch and Custom Domain&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ol&gt;
+&lt;li&gt;In your web browser, go the &#39;Settings&#39; page of your repository.&lt;/li&gt;
+&lt;li&gt;At the bottom of the page (make sure you scroll down), you fill find GitHub Pages section.&lt;/li&gt;
+&lt;li&gt;Choose the &lt;code&gt;main&lt;/code&gt; branch and the &lt;code&gt;/docs&lt;/code&gt; directory.&lt;/li&gt;
+&lt;li&gt;Click &#39;Save&#39;&lt;/li&gt;
+&lt;li&gt;In the &#39;Custom Domain&#39; section, type your domain name (without http/https).&lt;/li&gt;
+&lt;li&gt;Click &#39;Save&#39;&lt;/li&gt;
+&lt;li&gt;Note that https (ssl) support comes out of the box, but you will need wait up to 24 hours until your certificate is generated. Make sure &#39;Enforce HTTPS&#39; option is checked.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;configuring-your-dns&#34;&gt;Configuring your DNS&lt;/h3&gt;
+&lt;p&gt;The last but not the least part we need to perform is to setup our domain&#39;s DNS settings to work with GitHub pages. I registered my domain via NameCheap domain registrar, but this process can be done from any domain registrar.&lt;/p&gt;
+&lt;p&gt;All we have to do is to setup a few &#39;A Records&#39; and &#39;CNAME record&#39; to work with GitHub pages.&lt;/p&gt;
+&lt;p&gt;In your domain management screen, open your Advanced DNS settings screen.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create &#39;A Record&#39; for @ host with &lt;code&gt;185.199.108.153&lt;/code&gt; value.&lt;/li&gt;
+&lt;li&gt;Create &#39;A Record&#39; for @ host with &lt;code&gt;185.199.109.153&lt;/code&gt; value.&lt;/li&gt;
+&lt;li&gt;Create &#39;A Record&#39; for @ host with &lt;code&gt;185.199.110.153&lt;/code&gt; value.&lt;/li&gt;
+&lt;li&gt;Create &#39;A Record&#39; for @ host with &lt;code&gt;185.199.111.153&lt;/code&gt; value.&lt;/li&gt;
+&lt;li&gt;Create &#39;CNAME Record&#39; for @ host with &lt;code&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt; value.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://gotask.net/wp-content/uploads/2020/12/advanced-dns-namecheap-git-hub-1.png&#34;
+         alt=&#34;Namecheap Advanced DNS For GitHub Pages&#34; width=&#34;725&#34; height=&#34;293&#34;/&gt; &lt;figcaption&gt;
+            &lt;p&gt;Namecheap Advanced DNS For GitHub Pages&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h3 id=&#34;testing-the-site&#34;&gt;Testing the site&lt;/h3&gt;
+&lt;p&gt;Type your domain in the web browser, the site should appear 🙂&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

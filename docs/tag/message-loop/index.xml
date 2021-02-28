@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>message-loop on GoTask</title>
+    <link>https://gotask.net/tag/message-loop/</link>
+    <description>Recent content in message-loop on GoTask</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>Copyright © 2020–2021 ; All rights reserved.</copyright>
+    <lastBuildDate>Sat, 07 Nov 2020 05:12:49 +0000</lastBuildDate><atom:link href="https://gotask.net/tag/message-loop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MFC Dialog – Get event on the first appearance</title>
+      <link>https://gotask.net/programming/mfc-dialog-get-event-on-the-first-appearance/</link>
+      <pubDate>Sat, 07 Nov 2020 05:12:49 +0000</pubDate>
+      
+      <guid>https://gotask.net/programming/mfc-dialog-get-event-on-the-first-appearance/</guid>
+      <description>
+        
+          &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Sometimes we still need to maintain some legacy code that was written ages ago. A long time ago, MFC library was the default choice for many programmers wanted to develop a Windows Desktop Application in C++.  Today, there are much better alternatives for the Desktop Applications developments that include: WPF, WinForms, Electron and more. &lt;/p&gt;
+&lt;p&gt;In this post, I am going to show a simple technique of how to get a callback in the &lt;code&gt;CDialog&lt;/code&gt; derived class when the dialog is first shown.&lt;/p&gt;
+&lt;h2 id=&#34;my-stack&#34;&gt;My Stack&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Visual Studio 2019 Community.&lt;/li&gt;
+&lt;li&gt;MFC Dialog Based application (32-bit)&lt;/li&gt;
+&lt;li&gt;Windows 10 Pro 64-bit (10.0, Build 19041)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;the-challenge&#34;&gt;The challenge&lt;/h2&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://gotask.net/wp-content/uploads/2020/11/form_on_form.png&#34;
+         alt=&#34;Modal dialog over dialog in C# Winforms&#34; width=&#34;367&#34; height=&#34;223&#34;/&gt; &lt;figcaption&gt;
+            &lt;p&gt;Modal dialog over dialog in C# Winforms&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Consider the following requirement: Show a modal dialog for the user to enter a username and
+a password, once the main dialog has been first shown. In .NET WinForms, all we have to do is add a handler to &lt;a href=&#34;https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.form.shown?view=netcore-3.1&#34;&gt;Form.Shown&lt;/a&gt; event and show the modal dialog.&lt;/p&gt;
+&lt;p&gt;The sample code in C# would look something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-C#&#34; data-lang=&#34;C#&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Form1_Shown&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;object&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sender&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EventArgs&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;loginDlg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;LoginForm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;loginDlg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ShowDialog&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;MFC comes with &lt;a href=&#34;https://docs.microsoft.com/en-us/cpp/mfc/reference/cdialog-class?view=msvc-160#oninitdialog&#34;&gt;OnInitDialog&lt;/a&gt; overridable function in case we need to perform some processing during the dialog initialization. Once called, all our controls are already created and have the valid window handle. The problem with OnInitDialog function is that the dialog is not yet been shown to the user. If we attempt to show the modal dialog in the OnInitDialog function of the main dialog, the main dialog will not be shown until we close the second modal dialog. Unfortunately, MFC does not provide us with the dialog &#39;shown&#39; event.&lt;/p&gt;
+&lt;h2 id=&#34;the-solution&#34;&gt;The solution&lt;/h2&gt;
+&lt;p&gt;The main idea is to postpone the second modal dialog creation for after the main dialog has been shown. This means that after OnInitDialog, we will need to get some callback function called and display our second dialog.&lt;/p&gt;
+&lt;p&gt;How do we achieve this? Fortunately, Win32 API enables us to register &lt;a href=&#34;https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-user&#34;&gt;custom windows messages&lt;/a&gt; for a private window use. We will use the &lt;a href=&#34;https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagea&#34;&gt;PostMessage&lt;/a&gt; Win32 API function to post such message to our window&#39;s thread message loop. &lt;code&gt;PostMessage&lt;/code&gt; function returns immediately and the message handler would be called asynchronously. &lt;/p&gt;
+&lt;h3 id=&#34;define-the-new-window-message&#34;&gt;Define the new window message&lt;/h3&gt;
+&lt;p&gt;Every window message has it&#39;s own unique number. According to &lt;a href=&#34;https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-user&#34;&gt;this MSDN article&lt;/a&gt;, we can use messages from &lt;code&gt;WM_USER&lt;/code&gt; to &lt;code&gt;0x7FFF&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So lets define the message as:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;#define WM_FIRST_SHOWN WM_USER + 100&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;adding-the-callback-function&#34;&gt;Adding the callback function&lt;/h3&gt;
+&lt;p&gt;In the main dialog class, define the &lt;code&gt;WM_FIRST_SHOWN&lt;/code&gt; message handler. It must have the return type of &lt;code&gt;LRESULT&lt;/code&gt; and get &lt;code&gt;WPARAM&lt;/code&gt; and &lt;code&gt;LPARAM&lt;/code&gt; as the function parameters although we are not going to use the parameters in this sample.&lt;/p&gt;
+&lt;p&gt;Place the second dialog creation in the callback&#39;s implementation code.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-C++&#34; data-lang=&#34;C++&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LRESULT&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CMFCDialogOnLoadDlg&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;::&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OnDialogShown&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WPARAM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;LPARAM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;CLoginDialog&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dlg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;dlg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DoModal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;  
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;  &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;adding-the-message-to-the-message-map&#34;&gt;Adding the message to the message map&lt;/h3&gt;
+&lt;p&gt;We need to bind the message id (&lt;code&gt;WM_FIRST_SHOWN&lt;/code&gt;) to the message handler function.&lt;/p&gt;
+&lt;p&gt;Please the following code in your message map:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-C++&#34; data-lang=&#34;C++&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ON_MESSAGE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WM_FIRST_SHOWN&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OnDialogShown&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;posting-the-message&#34;&gt;Posting the message&lt;/h3&gt;
+&lt;figure&gt;
+    &lt;img src=&#34;https://gotask.net/wp-content/uploads/2020/11/dialog_on_dialog.png&#34;
+         alt=&#34;Dialog on dialog in MFC&#34; width=&#34;362&#34; height=&#34;263&#34;/&gt; &lt;figcaption&gt;
+            &lt;p&gt;Dialog on dialog in MFC&lt;/p&gt;
+        &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Finally, we need to post the &lt;code&gt;WM_FIRST_SHOWN&lt;/code&gt; message to the main window&#39;s thread message queue. Place the following code to the end of you &lt;code&gt;OnInitDialog&lt;/code&gt; member function.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;PostMessage(WM_FIRST_SHOWN);&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;MFC source code available at &lt;a href=&#34;https://github.com/eyalmolad/gotask/tree/master/MFC/MFCDialogOnLoad&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;C# Source code available at &lt;a href=&#34;https://github.com/eyalmolad/gotask/tree/master/Winforms/WindowsFormsDialogOnLoad&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
